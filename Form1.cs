@@ -14,15 +14,14 @@ namespace Snake
         {
             InitializeComponent();
 
-            //Set settings to default
             new Settings();
 
-            //Set game speed and start timer
+            //Ustaw szybkość gry i zegar startowy.
             gameTimer.Interval = 1000 / Settings.Speed;
             gameTimer.Tick += UpdateScreen;
             gameTimer.Start();
 
-            //Start New game
+            //Start nowej gry
             StartGame();
         }
 
@@ -30,10 +29,9 @@ namespace Snake
         {
             lblGameOver.Visible = false;
 
-            //Set settings to default
             new Settings();
 
-            //Create new player object
+            //Tworzenie gracza
             Snake.Clear();
             Circle head = new Circle {X = 10, Y = 5};
             Snake.Add(head);
@@ -44,7 +42,7 @@ namespace Snake
 
         }
 
-        //Place random food object
+        //Miejsce przypadkowego obiektu z jedzeniem
         private void GenerateFood()
         {
             int maxXPos = pbCanvas.Size.Width / Settings.Width;
@@ -57,10 +55,10 @@ namespace Snake
 
         private void UpdateScreen(object sender, EventArgs e)
         {
-            //Check for Game Over
+            //Sprawdź, czy gra się nie skończyła.
             if (Settings.GameOver)
             {
-                //Check if Enter is pressed
+                //Sprawdzić, czy wciśnięty jest klawisz Enter.
                 if (Input.KeyPressed(Keys.Enter))
                 {
                     StartGame();
@@ -90,25 +88,25 @@ namespace Snake
 
             if (!Settings.GameOver)
             {
-                //Set colour of snake
+                //Ustawiony kolor węża
 
-                //Draw snake
+                //Rysowanie węża
                 for (int i = 0; i < Snake.Count; i++)
                 {
                     Brush snakeColour;
                     if (i == 0)
-                        snakeColour = Brushes.Black;     //Draw head
+                        snakeColour = Brushes.Black;     //Rysowanie głowy
                     else
-                        snakeColour = Brushes.Green;    //Rest of body
+                        snakeColour = Brushes.Green;    //Rysowanie reszty ciała
 
-                    //Draw snake
+                    //Rysuj węża
                     canvas.FillEllipse(snakeColour,
                         new Rectangle(Snake[i].X * Settings.Width,
                                       Snake[i].Y * Settings.Height,
                                       Settings.Width, Settings.Height));
 
 
-                    //Draw Food
+                    //Rysuj jedzenie
                     canvas.FillEllipse(Brushes.Red,
                         new Rectangle(food.X * Settings.Width,
                              food.Y * Settings.Height, Settings.Width, Settings.Height));
@@ -128,7 +126,7 @@ namespace Snake
         {
             for (int i = Snake.Count - 1; i >= 0; i--)
             {
-                //Move head
+                //Poruszanie głową
                 if (i == 0)
                 {
                     switch (Settings.direction)
@@ -148,11 +146,11 @@ namespace Snake
                     }
 
 
-                    //Get maximum X and Y Pos
+                    //Max X i Y
                     int maxXPos = pbCanvas.Size.Width / Settings.Width;
                     int maxYPos = pbCanvas.Size.Height / Settings.Height;
 
-                    //Detect collission with game borders.
+                    //Wykrywanie kolizji z granicami gry.
                     if (Snake[i].X < 0 || Snake[i].Y < 0
                         || Snake[i].X >= maxXPos || Snake[i].Y >= maxYPos)
                     {
@@ -160,7 +158,7 @@ namespace Snake
                     }
 
 
-                    //Detect collission with body
+                    //Wykrywanie kolizji z ciałem.
                     for (int j = 1; j < Snake.Count; j++)
                     {
                         if (Snake[i].X == Snake[j].X &&
@@ -170,7 +168,7 @@ namespace Snake
                         }
                     }
 
-                    //Detect collision with food piece
+                    //Wykrywanie kolizji z kawałkami jedzenia
                     if (Snake[0].X == food.X && Snake[0].Y == food.Y)
                     {
                         Eat();
@@ -179,7 +177,7 @@ namespace Snake
                 }
                 else
                 {
-                    //Move body
+                    //Poruszanie ciała
                     Snake[i].X = Snake[i - 1].X;
                     Snake[i].Y = Snake[i - 1].Y;
                 }
@@ -198,7 +196,7 @@ namespace Snake
 
         private void Eat()
         {
-            //Add circle to body
+            //Dodanie jedzenia do ciała
             Circle circle = new Circle
             {
                 X = Snake[Snake.Count - 1].X,
@@ -206,7 +204,7 @@ namespace Snake
             };
             Snake.Add(circle);
 
-            //Update Score
+            //Dodanie punktów
             Settings.Score += Settings.Points;
             lblScore.Text = Settings.Score.ToString();
 
